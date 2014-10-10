@@ -13,5 +13,5 @@ local.properties
 .settings
 .loadpath
 assets
-project.properties
+#project.properties
 android-support-*.jar

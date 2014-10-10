@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_launch"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="@string/launch">
+    </item>
+    <item
+        android:id="@+id/menu_up"
+        android:title="@string/up">
+    </item>
+    <item
+        android:id="@+id/menu_down"
+        android:title="@string/down">
+    </item>
+    
+    <item
+        android:id="@+id/menu_edit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/edit">
+    </item>
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/delete">
+    </item>
+
+</menu>
