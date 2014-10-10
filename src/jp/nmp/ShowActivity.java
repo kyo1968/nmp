@@ -1,18 +1,21 @@
 package jp.nmp;
 
 import java.util.Map;
-
 import jp.nmp.R;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 /**
  *  Show Activity class.
@@ -61,6 +64,11 @@ public final class ShowActivity extends BaseActivity {
 	 * Item position.
 	 */
 	private int pos = -1;
+	
+	/**
+	 * Non-masked password.
+	 */
+	private String nonMasked;
 
 	/**
 	 * {@inheritDoc}
@@ -92,20 +100,20 @@ public final class ShowActivity extends BaseActivity {
 			}
 			
 			/* Mask password item */
-			final String pwd = itemPwd.getText().toString();
+			nonMasked = itemPwd.getText().toString();
 			itemPwd.setText(R.string.masked_string);
 			
 			/* Register check box listener */
-			CheckBox maskPwd = (CheckBox)findViewById(R.id.maskPwd);
+			ToggleButton maskPwd = (ToggleButton)findViewById(R.id.maskPwd);
 			maskPwd.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					/* Invert masked and unmasked password */
-					CheckBox cb = (CheckBox)v;
-					if (cb.isChecked()) {
+					ToggleButton c = (ToggleButton)v;
+					if (c.isChecked()) {
 						itemPwd.setText(R.string.masked_string);
 					} else {
-						itemPwd.setText(pwd);
+						itemPwd.setText(nonMasked);
 					}
 				}
 			});
@@ -125,6 +133,8 @@ public final class ShowActivity extends BaseActivity {
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
@@ -158,6 +168,23 @@ public final class ShowActivity extends BaseActivity {
 			.setPositiveButton(android.R.string.ok, null)
 			.show();
 			return(true);
+			
+		case R.id.menu_copypwd:
+			/* Copy password to the clipboard */
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				/* This part is written with new API later than HONEYCOMB */
+			    android.content.ClipboardManager c = (android.content.ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+			    android.content.ClipData clipData = android.content.ClipData.newPlainText("text label", nonMasked);
+			    c.setPrimaryClip(clipData);
+			} else {
+				/* This part is written with deprecated API earlier than HONEYCOMB */
+				android.text.ClipboardManager c = (android.text.ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+			    c.setText(nonMasked);
+			}
+			
+			/* Display clipboard notification */
+			Toast.makeText(this, R.string.copy_pwd_to_clipboard, Toast.LENGTH_LONG).show(); 
+			return (true);
 			
 		default:
 			return super.onOptionsItemSelected(item);

@@ -1,14 +1,17 @@
 package jp.nmp;
 
 import java.util.Map;
-
 import jp.nmp.R;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -66,15 +69,10 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 	private EditText itemHint3;
 	
 	/**
-	 * SeekBar: password generator 
+	 * ImageButton: generate password
 	 */
-	private SeekBar seekBar;
+	private ImageButton genPwd;
 	
-	/**
-	 * TextView: password length 
-	 */
-	private TextView pwdLen;
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -91,8 +89,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 		itemHint1 = (EditText)findViewById(R.id.itemHint1);
 		itemHint2 = (EditText)findViewById(R.id.itemHint2);
 		itemHint3 = (EditText)findViewById(R.id.itemHint3);
-		seekBar = (SeekBar)findViewById(R.id.seekBar);
-		pwdLen = (TextView)findViewById(R.id.pwdLength);
+		genPwd = (ImageButton)findViewById(R.id.genPwd);
 		
 		/* Get a selected item */
 		Bundle bundle = getIntent().getExtras();
@@ -108,24 +105,13 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 			}
 		}
 		
-		/* Register password generation listener */
-		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+		genPwd.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-			}
-			
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
-			
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				/* Generate password */
-				int len = seekBar.getProgress();
-				itemPwd.setText(rand.generate(len));
-				pwdLen.setText(String.valueOf(len));
+			public void onClick(View v) {
+				generatePassword();
 			}
 		});
+		
 	}
 	
 	/**
@@ -181,6 +167,10 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 			.setNegativeButton(android.R.string.no, null)
 			.show();
 			return(true);
+			
+		case R.id.menu_genpwd:
+			generatePassword();
+			return (true);
 			
 		default:
 			return super.onOptionsItemSelected(item);
@@ -252,12 +242,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 		setValue(itemHint1, item.get(Repository.HINT1));
 		setValue(itemHint2, item.get(Repository.HINT2));
 		setValue(itemHint3, item.get(Repository.HINT3));
-		
-		String pwd = item.get(Repository.PASSWD);
-		if (pwd != null) {
-			seekBar.setProgress(pwd.length());
-			pwdLen.setText(String.valueOf(pwd.length()));
-		}
 	}
 
 	/**
@@ -268,5 +252,53 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 	private boolean isDirty() {
 		/* TODO: not implemented yet */
 		return (true);
+	}
+	
+	/**
+	 * Generate password.
+	 */
+	private void generatePassword() {
+		/* Initiate a dialog */
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View view = inflater.inflate(R.layout.activity_genpwd, null);
+		
+		SeekBar seekBar = (SeekBar)view.findViewById(R.id.seekBar); 
+		final TextView pwdLen = (TextView)view.findViewById(R.id.pwdLength);
+		final EditText pwdEdit = (EditText)view.findViewById(R.id.itemPwd);
+		
+		/* Register password generation listener */
+		seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				/* Generate password */
+				int len = seekBar.getProgress();
+				pwdEdit.setText(rand.generate(len));
+				pwdLen.setText(String.valueOf(len));
+			}
+		});
+		
+		/* Initiate a dialog */
+		AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+		//.setIcon(R.drawable.ic_launcher)
+		.setTitle(R.string.title_genpwd)
+		.setView(view)
+		.setCancelable(true)
+		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				/* Set password to a parent item */
+				itemPwd.setText(pwdEdit.getText().toString());
+			}
+		})
+		.setNegativeButton(android.R.string.cancel, null);
+		dialog.show();
 	}
 }

@@ -1,7 +1,6 @@
 package jp.nmp;
 
 import java.util.Map;
-
 import jp.nmp.R;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

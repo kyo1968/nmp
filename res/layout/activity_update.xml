@@ -14,7 +14,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/text1"
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label" />
@@ -24,15 +24,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text" 
-            android:maxLength="64">
+            android:inputType="text"
+            android:maxLength="64" >
 
             <requestFocus />
-
         </EditText>
 
         <TextView
-            android:id="@+id/addDate"
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/user_id" />
@@ -51,33 +50,29 @@
             android:layout_height="wrap_content"
             android:text="@string/password" />
 
-        <EditText
-            android:id="@+id/itemPwd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text" 
-            android:maxLength="64"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <SeekBar
-                android:id="@+id/seekBar"
+            <EditText
+                android:id="@+id/itemPwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:max="32" />
+                android:ems="10"
+                android:inputType="text"
+                android:maxLength="64" />
 
-            <TextView
-                android:id="@+id/pwdLength"
+            <ImageButton
+                android:id="@+id/genPwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_weight="0"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/zero" />
+                android:background="@null"
+                android:contentDescription="@string/genpwd_desc"
+                android:src="@android:drawable/ic_menu_more" />
+
         </LinearLayout>
 
         <TextView
@@ -92,17 +87,18 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textUri"
-            android:maxLength="256"/>
+            android:maxLength="256" />
 
         <TextView
-            android:id="@+id/updateDate"
+            android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/hint" />
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/listview_vartical_padding" >
 
             <TableRow
                 android:id="@+id/tableRow1"
@@ -121,8 +117,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="text" 
-                    android:maxLength="64"/>
+                    android:inputType="text"
+                    android:maxLength="64" />
             </TableRow>
 
             <TableRow
@@ -142,8 +138,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="text" 
-                    android:maxLength="64"/>
+                    android:inputType="text"
+                    android:maxLength="64" />
             </TableRow>
 
             <TableRow
@@ -163,10 +159,41 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="text" 
-                    android:maxLength="64"/>
+                    android:inputType="text"
+                    android:maxLength="64" />
             </TableRow>
         </TableLayout>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expire" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/itemExpire"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="date" />
+
+            <ImageButton
+                android:id="@+id/expireDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@null"
+                android:contentDescription="@string/expire_desc"
+                android:src="@android:drawable/ic_menu_month" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>
