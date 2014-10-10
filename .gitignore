@@ -1,0 +1,17 @@
+*.apk
+*.ap_
+bin
+gen
+lint.xml
+.project
+.settings
+.metadata
+*.tmp
+*.bak
+local.properties
+.classpath
+.settings
+.loadpath
+assets
+project.properties
+android-support-*.jar
