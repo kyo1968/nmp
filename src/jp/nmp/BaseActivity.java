@@ -312,4 +312,13 @@ public class BaseActivity extends Activity {
 	protected void makeToast(int resource) {
 		Toast.makeText(this, resource, Toast.LENGTH_SHORT).show();
 	}
+	
+	/**
+	 * Display toast massage.
+	 * 
+	 * @param msg message string
+	 */
+	protected void makeToast(String msg) {
+		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+	}
 }

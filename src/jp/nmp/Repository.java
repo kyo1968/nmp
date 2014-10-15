@@ -94,15 +94,25 @@ public final class Repository {
 	public static final String UPDATED = "updated";
 
 	/**
+	 * Item key: expire date
+	 */
+	public static final String EXPIRE = "expire";
+	
+	/**
 	 * Item list.
 	 */
-	private List<Map<String, String>> itemList = new ArrayList<Map<String, String>>();
+	private List<Map<String, Object>> itemList = new ArrayList<Map<String, Object>>();
 	
 	/**
 	 * Date formatter.
 	 */
 	private static final DateFormat df = SimpleDateFormat.getInstance();
-	
+
+	/**
+	 * Date formatter.
+	 */
+	private static final DateFormat df2 = SimpleDateFormat.getDateInstance();
+
 	/**
 	 * Secret phrase.
 	 */
@@ -154,7 +164,7 @@ public final class Repository {
 	 * 
 	 * @return item list.
 	 */
-	public List<Map<String, String>> list() {
+	public List<Map<String, Object>> list() {
 		return (itemList);
 	}
 
@@ -168,9 +178,10 @@ public final class Repository {
 	 * @param hint1 1st hint
 	 * @param hint2 2nd hint
 	 * @param hint3 3rd hint
+	 * @param expire expire date
 	 */
-	public void add(String label, String user, String passwd, String url, String hint1, String hint2, String hint3) {
-		Map<String, String> item = new HashMap<String, String>();
+	public void add(String label, String user, String passwd, String url, String hint1, String hint2, String hint3, Date expire) {
+		Map<String, Object> item = new HashMap<String, Object>();
 		
 		set(item, LABEL, label);
 		set(item, USER, user);
@@ -180,7 +191,9 @@ public final class Repository {
 		set(item, HINT2, hint2);
 		set(item, HINT3, hint3);
 		set(item, ADDED, df.format(new Date()));
-		//itemList.add(item);
+		if (expire != null) {
+			set(item, EXPIRE, df2.format(expire));
+		}
 		
 		// add item to the head.
 		if(itemList.size() == 0) {
@@ -195,7 +208,7 @@ public final class Repository {
 	 * 
 	 * @param pos position
 	 */
-	public Map<String, String> get(int pos) {
+	public Map<String, Object> get(int pos) {
 		return (itemList.get(pos));
 	}
 	
@@ -210,10 +223,11 @@ public final class Repository {
 	 * @param hint1 1st hint
 	 * @param hint2 2nd hint
 	 * @param hint3 3rd hint
+	 * @param expire expire date
 	 */
-	public void put(int pos, String label, String user, String passwd, String url, String hint1, String hint2, String hint3) {
+	public void put(int pos, String label, String user, String passwd, String url, String hint1, String hint2, String hint3, Date expire) {
 		/* Get an item */
-		Map<String, String> item = get(pos);
+		Map<String, Object> item = get(pos);
 		
 		/* Set new values */
 		if (item != null) {
@@ -225,6 +239,12 @@ public final class Repository {
 			set(item, HINT2, hint2);
 			set(item, HINT3, hint3);
 			set(item, UPDATED, df.format(new Date()));
+			
+			if (expire != null) {
+				set(item, EXPIRE, df2.format(expire));
+			} else {
+				item.remove(EXPIRE);
+			}
 		}
 	}	
 
@@ -244,7 +264,7 @@ public final class Repository {
 	 * @param to moved position
 	 */
 	public void move(int from, int to) {
-		Map<String, String> o = get(from);
+		Map<String, Object> o = get(from);
 		if (o != null) {
 			
 			int size = list().size();
@@ -268,7 +288,7 @@ public final class Repository {
 	 * @param key key of item
 	 * @param value value of item 
 	 */
-	private void set(Map<String, String>item, String key, String value) {
+	private void set(Map<String, Object>item, String key, String value) {
 		//if (value != null && value.length() > 0) {
 		if (value != null) {
 			item.put(key, value);
@@ -411,15 +431,15 @@ public final class Repository {
 			
 			/* write items */
 			int i = 0;
-			for(Map<String, String> e : itemList) {
+			for(Map<String, Object> e : itemList) {
 
 				/* write Sections */
 				w.println("[" + i + "]");
 				
 				/* write properties */
-				for (Entry<String, String> e2 : e.entrySet()) {
+				for (Entry<String, Object> e2 : e.entrySet()) {
 					String key = e2.getKey();
-					String value = e2.getValue();
+					Object value = e2.getValue();
 					w.println(key + "=" + value);
 				}
 
@@ -475,7 +495,7 @@ public final class Repository {
 			Pattern p1 =Pattern.compile("(.+?)=(.+)");			/* Properties */
 
 			String s;
-			Map<String, String> cm = null;
+			Map<String, Object> cm = null;
 			
 			/* Read each line */
 			while ((s = r.readLine()) != null) {
@@ -490,7 +510,7 @@ public final class Repository {
 					/* Create section */
 					String key = m.group(1);
 					if (key != null) {
-						cm = new HashMap<String, String>();
+						cm = new HashMap<String, Object>();
 						itemList.add(cm);
 					}
 				} else if (cm != null ) {

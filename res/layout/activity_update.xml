@@ -26,8 +26,6 @@
             android:ems="10"
             android:inputType="text"
             android:maxLength="64" >
-
-            <requestFocus />
         </EditText>
 
         <TextView
@@ -170,29 +168,11 @@
             android:layout_height="wrap_content"
             android:text="@string/expire" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/itemExpire"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <EditText
-                android:id="@+id/itemExpire"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="date" />
-
-            <ImageButton
-                android:id="@+id/expireDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@null"
-                android:contentDescription="@string/expire_desc"
-                android:src="@android:drawable/ic_menu_month" />
-
-        </LinearLayout>
+            android:text="@string/default_date" />
 
     </LinearLayout>
 

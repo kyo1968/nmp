@@ -1,5 +1,10 @@
 package jp.nmp;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import jp.nmp.R;
 import android.app.AlertDialog;
@@ -39,6 +44,9 @@ public final class MainActivity extends BaseActivity {
 	 */
 	private SimpleAdapter adapter;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,8 +55,8 @@ public final class MainActivity extends BaseActivity {
 		/* List-view settings */
 		Repository repo = Repository.getInstance();
 		adapter = new SimpleAdapter(this, repo.list(), R.layout.listview_layout,
-				new String[] {Repository.LABEL, Repository.HINT1}, 
-				new int[] {R.id.text1, R.id.text2});
+				new String[] {"img", Repository.LABEL, Repository.HINT1}, 
+				new int[] { R.id.img, R.id.text1, R.id.text2});
 		
 		ListView lv = (ListView) findViewById(R.id.listView);
 		lv.setOnItemClickListener(new OnItemClickListener() {
@@ -103,7 +111,7 @@ public final class MainActivity extends BaseActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		adapter.notifyDataSetChanged();
+		notifyDataSetChanged();
 	}
 	
 	/**
@@ -147,7 +155,7 @@ public final class MainActivity extends BaseActivity {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					Repository repo = Repository.getInstance();
 					clearRepository(repo);
-					adapter.notifyDataSetChanged();
+					notifyDataSetChanged();
 				}
 			})
 			.setNegativeButton(android.R.string.no, null)
@@ -166,7 +174,7 @@ public final class MainActivity extends BaseActivity {
 			.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					importRepository();
-					adapter.notifyDataSetChanged();
+					notifyDataSetChanged();
 				}
 			})
 			.setNegativeButton(android.R.string.no, null)
@@ -199,22 +207,22 @@ public final class MainActivity extends BaseActivity {
 		switch(item.getItemId()) {
 		case R.id.menu_launch:	/* Launch web site */
 			if (pos < repo.list().size()) {
-				Map<String, String> it = repo.get(pos);
-				launchUrl(it.get(Repository.URL));
+				Map<String, Object> it = repo.get(pos);
+				launchUrl((String)it.get(Repository.URL));
 			}
 			return true;
 			
 		case R.id.menu_up:
 			if (pos < repo.list().size()) {
 				repo.move(pos, pos - 1);
-				adapter.notifyDataSetChanged();
+				notifyDataSetChanged();
 			}			
 			return true;
 
 		case R.id.menu_down:
 			if (pos < repo.list().size()) {
 				repo.move(pos, pos + 1);
-				adapter.notifyDataSetChanged();
+				notifyDataSetChanged();
 			}			
 			return true;
 
@@ -280,7 +288,7 @@ public final class MainActivity extends BaseActivity {
 					}
 					
 					/* Update item list-view */
-					adapter.notifyDataSetChanged();
+					notifyDataSetChanged();
 				}
 			})
 			.show();
@@ -395,7 +403,7 @@ public final class MainActivity extends BaseActivity {
 		
 		/* Save repository */
 		if (saveRepository(repo, true)) {
-			adapter.notifyDataSetChanged();	/* Update item list-view */
+			notifyDataSetChanged();	/* Update item list-view */
 		}
 	}
 	
@@ -418,4 +426,31 @@ public final class MainActivity extends BaseActivity {
 		}
 	}
 	
+	private void notifyDataSetChanged() {
+		/* Insert status icon */
+		Repository repo = Repository.getInstance();
+		List<Map<String, Object>> list = repo.list();
+		DateFormat df = SimpleDateFormat.getDateInstance();
+		long ct = new Date().getTime();
+		for (Map<String, Object>e : list) {
+			String expire = (String)e.get(Repository.EXPIRE);
+			if (expire != null) {
+				try {
+					/* Compare current date and expire date */
+					if (ct < df.parse(expire).getTime()) {
+						e.put("img", R.drawable.ic_lock);		/* Not expired yet */
+					} else {
+						e.put("img", R.drawable.ic_unlock);		/* Already expired */
+					}
+				} catch (ParseException ex) {
+					e.put("img", R.drawable.ic_unknown);	/* Cannot determine the status */
+				}
+			} else {
+				e.put("img", R.drawable.ic_unknown);	/* expire date unspecified */
+			}
+		}
+		
+		/* Update list view */
+		adapter.notifyDataSetChanged();
+	}
 }

@@ -1,8 +1,14 @@
 package jp.nmp;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import jp.nmp.R;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -21,7 +29,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
  * 
  * @author kyo
  * @version 1.0
- */public final class UpdateActivity extends BaseActivity {
+ */
+public final class UpdateActivity extends BaseActivity {
 
 	/**
 	 * Random password generator.
@@ -69,6 +78,11 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 	private EditText itemHint3;
 	
 	/**
+	 * EditText: expire date
+	 */
+	private Button itemExpire;
+	
+	/**
 	 * ImageButton: generate password
 	 */
 	private ImageButton genPwd;
@@ -90,6 +104,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 		itemHint2 = (EditText)findViewById(R.id.itemHint2);
 		itemHint3 = (EditText)findViewById(R.id.itemHint3);
 		genPwd = (ImageButton)findViewById(R.id.genPwd);
+		itemExpire = (Button)findViewById(R.id.itemExpire);
 		
 		/* Get a selected item */
 		Bundle bundle = getIntent().getExtras();
@@ -99,7 +114,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 			/* Get an item from repository */
 			Repository repo = Repository.getInstance();
 			if (i < repo.list().size()) {
-				Map<String, String> item = repo.get(i);
+				Map<String, Object> item = repo.get(i);
 				setItemInfo(item);
 				pos = i;
 			}
@@ -109,6 +124,13 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 			@Override
 			public void onClick(View v) {
 				generatePassword();
+			}
+		});
+		
+		itemExpire.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				selectExpireDate();
 			}
 		});
 		
@@ -153,6 +175,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.menu_save:
+			/* Save an item */
 			new AlertDialog.Builder(this)
 			.setIcon(android.R.drawable.ic_dialog_alert)
 			.setTitle(R.string.title_update)
@@ -169,6 +192,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 			return(true);
 			
 		case R.id.menu_genpwd:
+			/* Generate password */
 			generatePassword();
 			return (true);
 			
@@ -183,7 +207,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 	 * @return true if it succeed.
 	 */
 	private boolean saveItem() {
-		
 		/* Get values from controls */
 		String label = itemLabel.getText().toString();
 		String user = itemUser.getText().toString();
@@ -192,6 +215,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 		String hint1 = itemHint1.getText().toString();
 		String hint2 = itemHint2.getText().toString();
 		String hint3 = itemHint3.getText().toString();
+		String expire = itemExpire.getText().toString();
 		
 		/* Check required values */
 		if (label == null || label.length() == 0) {
@@ -208,13 +232,25 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 			new DialogBuilder(this).error(R.string.require_password);
 			return (false);
 		}
+		
+		/* Parse expire date */
+		Date expireDate = null;
+		if (expire != null && !expire.equals(getString(R.string.default_date))) {
+			try {
+				DateFormat df = SimpleDateFormat.getDateInstance();
+				expireDate = df.parse(expire);
+			} catch (ParseException e) {
+				makeToast(getString(R.string.dateformat_error, expire));
+				return(false);
+			}
+		}
 				
 		/* Update items */
 		Repository repo = Repository.getInstance();
 		if (pos < 0) {		/* Add new one */
-			repo.add(label, user, passwd, url, hint1, hint2, hint3);
+			repo.add(label, user, passwd, url, hint1, hint2, hint3, expireDate);
 		} else {				/* Update exist */
-			repo.put(pos, label, user, passwd, url, hint1, hint2, hint3);
+			repo.put(pos, label, user, passwd, url, hint1, hint2, hint3, expireDate);
 		}
 		
 		/* Save repository */
@@ -233,15 +269,21 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 	 * 
 	 * @param item item map.
 	 */
-	private void setItemInfo(Map<String, String> item) {
+	private void setItemInfo(Map<String, Object> item) {
 		/* Set item values */
-		setValue(itemLabel, item.get(Repository.LABEL));
-		setValue(itemUser, item.get(Repository.USER));
-		setValue(itemPwd, item.get(Repository.PASSWD));
-		setValue(itemUrl, item.get(Repository.URL));
-		setValue(itemHint1, item.get(Repository.HINT1));
-		setValue(itemHint2, item.get(Repository.HINT2));
-		setValue(itemHint3, item.get(Repository.HINT3));
+		setValue(itemLabel, (String)item.get(Repository.LABEL));
+		setValue(itemUser, (String)item.get(Repository.USER));
+		setValue(itemPwd, (String)item.get(Repository.PASSWD));
+		setValue(itemUrl, (String)item.get(Repository.URL));
+		setValue(itemHint1,(String) item.get(Repository.HINT1));
+		setValue(itemHint2,(String) item.get(Repository.HINT2));
+		setValue(itemHint3, (String)item.get(Repository.HINT3));
+		
+		String expire = (String)item.get(Repository.EXPIRE);
+		if (expire == null) {
+			expire = getString(R.string.default_date);
+		}
+		setValue(itemExpire, expire);
 	}
 
 	/**
@@ -299,6 +341,43 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 			}
 		})
 		.setNegativeButton(android.R.string.cancel, null);
+		dialog.show();
+	}
+	
+	/**
+	 * Select expire date.
+	 */
+	private void selectExpireDate() {
+		/* Get current expire date */
+		Calendar c = Calendar.getInstance();
+		try {
+			DateFormat df = SimpleDateFormat.getDateInstance();
+			Date d = df.parse(itemExpire.getText().toString());
+			c.setTime(d);
+		} catch (ParseException e) {
+			/* Set current date if it has no value */
+			c.setTime(new Date());
+		}
+		
+		/* Initiate a date picker dialog */
+		int year = c.get(Calendar.YEAR); 
+		int month = c.get(Calendar.MONTH); 
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+				itemExpire.setText(getString(R.string.date_format, year, monthOfYear + 1, dayOfMonth));
+			}
+		}, year, month, day);
+		
+		/* Activate clear button */
+		dialog.setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.clear_date), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				itemExpire.setText(R.string.default_date);
+			}
+		});
+		
 		dialog.show();
 	}
 }

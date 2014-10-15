@@ -36,6 +36,7 @@
     <string name="apply_new_phrase">Applied new secret phrase.</string>
     <string name="close_error">Cannot close repository.</string>
     <string name="save_error">Cannot save repository.</string>
+    <string name="dateformat_error">Invalid date format: %s</string>
     <string name="confirm_delete">Delete this item?</string>
     <string name="confirm_update">Update this item?</string>
     <string name="confirm_discard">Discard changes?</string>
@@ -83,5 +84,8 @@
     <string name="registered_desc">Register Date</string>
     <string name="expire">Expire date</string>
     <string name="expire_desc">Expire Date</string>
+    <string name="date_format">%1$04d/%2$02d/%3$02d</string>
+    <string name="default_date">----/--/--</string>
+    <string name="clear_date">Clear</string>
     
 </resources>

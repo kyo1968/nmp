@@ -56,9 +56,14 @@ public final class ShowActivity extends BaseActivity {
 	private EditText itemHint2;
 
 	/**
-	 * TextView: 3rd hintl
+	 * TextView: 3rd hint
 	 */
 	private EditText itemHint3;
+	
+	/**
+	 * TextView: expire date
+	 */
+	private EditText itemExpire;
 	
 	/**
 	 * Item position.
@@ -86,6 +91,7 @@ public final class ShowActivity extends BaseActivity {
 		itemHint1 = (EditText)findViewById(R.id.itemHint1);
 		itemHint2 = (EditText)findViewById(R.id.itemHint2);
 		itemHint3 = (EditText)findViewById(R.id.itemHint3);
+		itemExpire = (EditText)findViewById(R.id.itemExpire);
 		
 		/* Get a selected item */
 		Bundle bundle = getIntent().getExtras();
@@ -95,7 +101,7 @@ public final class ShowActivity extends BaseActivity {
 			/* Get an item from repository */
 			Repository repo = Repository.getInstance();
 			if (pos >= 0 && pos < repo.list().size()) {
-				Map<String, String> item = repo.get(pos);
+				Map<String, Object> item = repo.get(pos);
 				setItemInfo(item);
 			}
 			
@@ -144,13 +150,13 @@ public final class ShowActivity extends BaseActivity {
 			View view = inflater.inflate(R.layout.activity_property, null);
 			
 			/* Set time stamp */
-			Map<String, String> it= Repository.getInstance().get(pos);
+			Map<String, Object> it= Repository.getInstance().get(pos);
 			TextView added = (TextView)view.findViewById(R.id.addDate);
 			TextView updated = (TextView)view.findViewById(R.id.updateDate);
 			
 			if (it != null) {
-				String ad = it.get(Repository.ADDED);
-				String ud = it.get(Repository.UPDATED);
+				String ad = (String)it.get(Repository.ADDED);
+				String ud = (String)it.get(Repository.UPDATED);
 				
 				if (ad != null)
 					added.setText(ad);
@@ -196,15 +202,21 @@ public final class ShowActivity extends BaseActivity {
 	 * 
 	 * @param item item map.
 	 */
-	private void setItemInfo(Map<String, String> item) {
+	private void setItemInfo(Map<String, Object> item) {
 		/* Set item values */
-		setValue(itemLabel, item.get(Repository.LABEL));
-		setValue(itemUser, item.get(Repository.USER));
-		setValue(itemPwd, item.get(Repository.PASSWD));
-		setValue(itemUrl, item.get(Repository.URL));
-		setValue(itemHint1, item.get(Repository.HINT1));
-		setValue(itemHint2, item.get(Repository.HINT2));
-		setValue(itemHint3, item.get(Repository.HINT3));
+		setValue(itemLabel, (String)item.get(Repository.LABEL));
+		setValue(itemUser, (String)item.get(Repository.USER));
+		setValue(itemPwd, (String)item.get(Repository.PASSWD));
+		setValue(itemUrl, (String)item.get(Repository.URL));
+		setValue(itemHint1, (String)item.get(Repository.HINT1));
+		setValue(itemHint2, (String)item.get(Repository.HINT2));
+		setValue(itemHint3, (String)item.get(Repository.HINT3));
+		
+		String expire = (String)item.get(Repository.EXPIRE);
+		if (expire == null) {
+			expire = getString(R.string.default_date);
+		}
+		setValue(itemExpire, expire);
 		
 		/* Cancel  the key listener  */
 		itemLabel.setKeyListener(null);
@@ -214,5 +226,6 @@ public final class ShowActivity extends BaseActivity {
 		itemHint1.setKeyListener(null);
 		itemHint2.setKeyListener(null);
 		itemHint3.setKeyListener(null);
+		itemExpire.setKeyListener(null);
 	}
 }
