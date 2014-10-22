@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_copypwd"
         android:icon="@android:drawable/ic_menu_set_as"
-        android:title="@string/copy_pwd">
+        android:title="@string/copy_pwd" android:showAsAction="ifRoom|withText">
     </item>
     <item
         android:id="@+id/menu_property"

@@ -321,4 +321,5 @@ public class BaseActivity extends Activity {
 	protected void makeToast(String msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
+	
 }

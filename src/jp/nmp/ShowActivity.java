@@ -1,18 +1,19 @@
 package jp.nmp;
 
 import java.util.Map;
+
 import jp.nmp.R;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -28,42 +29,42 @@ public final class ShowActivity extends BaseActivity {
 	/**
 	 * TextView: label
 	 */
-	private EditText itemLabel;
+	private TextView itemLabel;
 
 	/**
 	 * TextView: user account
 	 */
-	private EditText itemUser;
+	private TextView itemUser;
 	
 	/**
 	 * TextView: password
 	 */
-	private EditText itemPwd;
+	private TextView itemPwd;
 
 	/**
 	 * TextView: URL
 	 */
-	private EditText itemUrl;
+	private TextView itemUrl;
 
 	/**
 	 * TextView: 1st hint
 	 */
-	private EditText itemHint1;
+	private TextView itemHint1;
 
 	/**
 	 * TextView: 2nd hint
 	 */
-	private EditText itemHint2;
+	private TextView itemHint2;
 
 	/**
 	 * TextView: 3rd hint
 	 */
-	private EditText itemHint3;
+	private TextView itemHint3;
 	
 	/**
 	 * TextView: expire date
 	 */
-	private EditText itemExpire;
+	private TextView itemExpire;
 	
 	/**
 	 * Item position.
@@ -84,14 +85,14 @@ public final class ShowActivity extends BaseActivity {
 		setContentView(R.layout.activity_show);
 		
 		/* Set views */
-		itemLabel = (EditText)findViewById(R.id.itemLabel);
-		itemUser = (EditText)findViewById(R.id.itemUser);
-		itemPwd = (EditText)findViewById(R.id.itemPwd);
-		itemUrl = (EditText)findViewById(R.id.itemUrl);
-		itemHint1 = (EditText)findViewById(R.id.itemHint1);
-		itemHint2 = (EditText)findViewById(R.id.itemHint2);
-		itemHint3 = (EditText)findViewById(R.id.itemHint3);
-		itemExpire = (EditText)findViewById(R.id.itemExpire);
+		itemLabel = (TextView)findViewById(R.id.itemLabel);
+		itemUser = (TextView)findViewById(R.id.itemUser);
+		itemPwd = (TextView)findViewById(R.id.itemPwd);
+		itemUrl = (TextView)findViewById(R.id.itemUrl);
+		itemHint1 = (TextView)findViewById(R.id.itemHint1);
+		itemHint2 = (TextView)findViewById(R.id.itemHint2);
+		itemHint3 = (TextView)findViewById(R.id.itemHint3);
+		itemExpire = (TextView)findViewById(R.id.itemExpire);
 		
 		/* Get a selected item */
 		Bundle bundle = getIntent().getExtras();
@@ -133,14 +134,18 @@ public final class ShowActivity extends BaseActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		/* Inflate the menu; this adds items to the action bar if it is present. */
 		getMenuInflater().inflate(R.menu.show, menu);
+		
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		if (!pref.getBoolean(getString(R.string.pref_key_copy_password), false)) {
+			menu.findItem(R.id.menu_copypwd).setEnabled(false);
+		}
+		
 		return true;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
@@ -177,16 +182,7 @@ public final class ShowActivity extends BaseActivity {
 			
 		case R.id.menu_copypwd:
 			/* Copy password to the clipboard */
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				/* This part is written with new API later than HONEYCOMB */
-			    android.content.ClipboardManager c = (android.content.ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-			    android.content.ClipData clipData = android.content.ClipData.newPlainText("text label", nonMasked);
-			    c.setPrimaryClip(clipData);
-			} else {
-				/* This part is written with deprecated API earlier than HONEYCOMB */
-				android.text.ClipboardManager c = (android.text.ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-			    c.setText(nonMasked);
-			}
+			copyText(nonMasked);
 			
 			/* Display clipboard notification */
 			Toast.makeText(this, R.string.copy_pwd_to_clipboard, Toast.LENGTH_LONG).show(); 
@@ -217,15 +213,26 @@ public final class ShowActivity extends BaseActivity {
 			expire = getString(R.string.default_date);
 		}
 		setValue(itemExpire, expire);
-		
-		/* Cancel  the key listener  */
-		itemLabel.setKeyListener(null);
-		itemUser.setKeyListener(null);
-		itemPwd.setKeyListener(null);
-		itemUrl.setKeyListener(null);
-		itemHint1.setKeyListener(null);
-		itemHint2.setKeyListener(null);
-		itemHint3.setKeyListener(null);
-		itemExpire.setKeyListener(null);
+	}
+	
+	/**
+	 * Copy text to clipboard.
+	 * 
+	 * @param text text.
+	 */
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
+	private void copyText(String text) {
+		/* Copy password to the clipboard */
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			/* This part is written with new API later than HONEYCOMB */
+			android.content.ClipboardManager c = (android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+			android.content.ClipData clipData = android.content.ClipData.newPlainText("text label", text);
+			c.setPrimaryClip(clipData);
+		} else {
+			/* This part is written with deprecated API earlier than HONEYCOMB */
+			android.text.ClipboardManager c = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+			c.setText(text);
+		}
 	}
 }

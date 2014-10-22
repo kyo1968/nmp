@@ -5,5 +5,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="listview_horizontal_padding">10dp</dimen>
     <dimen name="listview_vartical_padding">10dp</dimen>
+    <dimen name="listview_item_margin">10dp</dimen>
 
 </resources>

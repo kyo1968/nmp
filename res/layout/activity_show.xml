@@ -2,16 +2,16 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ScrollView"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin" >
+    android:layout_height="fill_parent" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
 
         <TextView
             android:id="@+id/text1"
@@ -19,31 +19,29 @@
             android:layout_height="wrap_content"
             android:text="@string/label" />
 
-        <EditText
+        <TextView
             android:id="@+id/itemLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/listview_item_margin"
+            android:background="@drawable/textline"
             android:ems="10"
-            android:inputType="text"
-            android:maxLength="64" >
-
-            <requestFocus />
-
-        </EditText>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/addDate"
+            android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/user_id" />
 
-        <EditText
+        <TextView
             android:id="@+id/itemUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/listview_item_margin"
+            android:background="@drawable/textline"
             android:ems="10"
-            android:inputType="text" 
-            android:maxLength="64"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/textView3"
@@ -53,43 +51,44 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <EditText
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/listview_item_margin" >
+            
+            <TextView
                 android:id="@+id/itemPwd"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:background="@drawable/textline"
                 android:ems="10"
-                android:inputType="text"
-                android:maxLength='64' >
-            </EditText>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <ToggleButton
                 android:id="@+id/maskPwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="0"
+                android:layout_gravity="center_vertical"
                 android:checked="true" />
 
         </LinearLayout>
-        
+
         <TextView
             android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/url" />
 
-        <EditText
+        <TextView
             android:id="@+id/itemUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/listview_item_margin"
+            android:background="@drawable/textline"
             android:ems="10"
-            android:inputType="textUri" 
-			android:maxLength='256' >	
-        </EditText>
-        
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
         <TextView
             android:id="@+id/updateDate"
             android:layout_width="wrap_content"
@@ -104,7 +103,8 @@
             <TableRow
                 android:id="@+id/tableRow1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingBottom="3dp" >
 
                 <TextView
                     android:id="@+id/textView5"
@@ -112,20 +112,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/one" />
 
-                <EditText
+                <TextView
                     android:id="@+id/itemHint1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/textline"
                     android:ems="10"
-                    android:inputType="text" 
-                    android:maxLength="64"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingBottom="3dp" >
 
                 <TextView
                     android:id="@+id/textView6"
@@ -133,21 +134,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/two" />
 
-                <EditText
+                <TextView
                     android:id="@+id/itemHint2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/textline"
                     android:ems="10"
-                    android:inputType="text"
-                    android:maxLength="64" />
-
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingBottom="3dp" >
 
                 <TextView
                     android:id="@+id/textView7"
@@ -155,14 +156,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/three" />
 
-                <EditText
+                <TextView
                     android:id="@+id/itemHint3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/textline"
                     android:ems="10"
-                    android:inputType="text" 
-                    android:maxLength="64"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
         </TableLayout>
 
@@ -173,14 +174,14 @@
             android:hint="@string/expire"
             android:text="@string/expire" />
 
-        <EditText
+        <TextView
             android:id="@+id/itemExpire"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/listview_item_margin"
+            android:background="@drawable/textline"
             android:ems="10"
-            android:inputType="date" >
-        </EditText>
-
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
 </ScrollView>
