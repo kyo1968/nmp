@@ -264,7 +264,7 @@ public final class MainActivity extends BaseActivity {
 			
 			/* Initiate secret phrase dialog */
 			new AlertDialog.Builder(this)
-			//.setIcon(R.drawable.ic_launcher)
+			.setIcon(R.drawable.ic_launcher)
 			.setTitle(R.string.enter_phrase)
 			.setView(view)
 			.setCancelable(true)
@@ -312,7 +312,7 @@ public final class MainActivity extends BaseActivity {
 		
 		/* Initiate secret phrase dialog */
 		AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-		//.setIcon(R.drawable.ic_launcher)
+		.setIcon(R.drawable.ic_launcher)
 		.setTitle(R.string.enter_phrase)
 		.setView(view)
 		.setCancelable(true)
@@ -359,7 +359,7 @@ public final class MainActivity extends BaseActivity {
 		
 		/* Initiate secret phrase dialog */
 		AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-		//.setIcon(R.drawable.ic_launcher)
+		.setIcon(R.drawable.ic_launcher)
 		.setTitle(R.string.enter_phrase)
 		.setView(view)
 		.setCancelable(true)
