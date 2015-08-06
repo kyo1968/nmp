@@ -5,12 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import jp.nmp.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +22,7 @@ import android.widget.Toast;
  * @author kyo
  * @version 1.0
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends ActionBarActivity {
 	
 	/**
 	 * {@inheritDoc}
