@@ -1,0 +1,9 @@
+* 2019-04-22
+
+Compiled with:
+Android 7.0.1
+target=android-25
+sdk.buildtools=25.0.3
+android.library.reference.1=appcompat-v7-21.0.3
+android.library.reference.2=support-v4-24.1.1
+
